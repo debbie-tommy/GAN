@@ -92,3 +92,14 @@ for epoch in range(num_epochs):
     # Print losses and save generated images
     if (epoch + 1) % 10 == 0:
         print(f'Epoch [{epoch + 1}/{num_epochs}], d_loss: {d_loss_real.item() + d_loss_fake.item():.4f}, g_loss: {g_loss.item():.4f}')
+
+# Generate new images
+with torch.no_grad():
+    noise = torch.randn(16, input_dim)
+    generated_images = generator(noise).view(-1, 1, 28, 28)
+
+# Plot generated images
+grid = torchvision.utils.make_grid(generated_images, nrow=4, normalize=True)
+plt.imshow(grid.permute(1, 2, 0).numpy())
+plt.axis('off')
+plt.show()
