@@ -33,3 +33,19 @@ class Discriminator(nn.Module):
 
     def forward(self, x):
         return self.model(x)
+
+# Hyperparameters
+batch_size = 64
+learning_rate = 0.0002
+num_epochs = 200
+input_dim = 100  # Dimension of the noise vector
+output_dim = 28 * 28  # MNIST images are 28x28 pixels
+
+# Data Loader
+transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize((0.5,), (0.5,))
+])
+
+mnist = dsets.MNIST(root='./data', train=True, transform=transform, download=True)
+data_loader = torch.utils.data.DataLoader(dataset=mnist, batch_size=batch_size, shuffle=True)
