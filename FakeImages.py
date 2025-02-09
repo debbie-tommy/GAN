@@ -58,3 +58,37 @@ discriminator = Discriminator(output_dim)
 criterion = nn.BCELoss()
 optimizer_G = optim.Adam(generator.parameters(), lr=learning_rate)
 optimizer_D = optim.Adam(discriminator.parameters(), lr=learning_rate)
+
+# Training the GAN
+for epoch in range(num_epochs):
+    for i, (images, _) in enumerate(data_loader):
+        # Flatten images
+        images = images.view(-1, 28 * 28)
+
+        # Create labels
+        real_labels = torch.ones(batch_size, 1)
+        fake_labels = torch.zeros(batch_size, 1)
+
+        # Train Discriminator
+        optimizer_D.zero_grad()
+        outputs = discriminator(images)
+        d_loss_real = criterion(outputs, real_labels)
+        d_loss_real.backward()
+
+        noise = torch.randn(batch_size, input_dim)
+        fake_images = generator(noise)
+        outputs = discriminator(fake_images.detach())
+        d_loss_fake = criterion(outputs, fake_labels)
+        d_loss_fake.backward()
+        optimizer_D.step()
+
+        # Train Generator
+        optimizer_G.zero_grad()
+        outputs = discriminator(fake_images)
+        g_loss = criterion(outputs, real_labels)
+        g_loss.backward()
+        optimizer_G.step()
+
+    # Print losses and save generated images
+    if (epoch + 1) % 10 == 0:
+        print(f'Epoch [{epoch + 1}/{num_epochs}], d_loss: {d_loss_real.item() + d_loss_fake.item():.4f}, g_loss: {g_loss.item():.4f}')
