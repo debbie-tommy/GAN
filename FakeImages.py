@@ -49,3 +49,12 @@ transform = transforms.Compose([
 
 mnist = dsets.MNIST(root='./data', train=True, transform=transform, download=True)
 data_loader = torch.utils.data.DataLoader(dataset=mnist, batch_size=batch_size, shuffle=True)
+
+# Initialize models
+generator = Generator(input_dim, output_dim)
+discriminator = Discriminator(output_dim)
+
+# Loss function and optimizers
+criterion = nn.BCELoss()
+optimizer_G = optim.Adam(generator.parameters(), lr=learning_rate)
+optimizer_D = optim.Adam(discriminator.parameters(), lr=learning_rate)
