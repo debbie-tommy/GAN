@@ -1,20 +1,27 @@
 import torch
+import torchvision
 import torch.nn as nn
 import torch.optim as optim
 import torchvision.datasets as dsets
 import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
 import numpy as np
+from torchvision.utils import make_grid
+
 
 # Generator
 class Generator(nn.Module):
     def __init__(self, input_dim, output_dim):
         super(Generator, self).__init__()
         self.model = nn.Sequential(
-            nn.Linear(input_dim, 128),
+            nn.Linear(input_dim, 256),
+            nn.BatchNorm1d(256),
             nn.ReLU(),
-            nn.Linear(128, output_dim),
-            nn.Tanh()  # Output values between -1 and 1
+            nn.Linear(256, 512),
+            nn.BatchNorm1d(512),
+            nn.ReLU(),
+            nn.Linear(512, output_dim),
+            nn.Tanh()
         )
 
     def forward(self, x):
@@ -25,10 +32,12 @@ class Discriminator(nn.Module):
     def __init__(self, input_dim):
         super(Discriminator, self).__init__()
         self.model = nn.Sequential(
-            nn.Linear(input_dim, 128),
+            nn.Linear(input_dim, 512),
             nn.LeakyReLU(0.2),
-            nn.Linear(128, 1),
-            nn.Sigmoid()  # Output probability
+            nn.Linear(512, 256),
+            nn.LeakyReLU(0.2),
+            nn.Linear(256, 1),
+            nn.Sigmoid()
         )
 
     def forward(self, x):
@@ -37,7 +46,7 @@ class Discriminator(nn.Module):
 # Hyperparameters
 batch_size = 64
 learning_rate = 0.0002
-num_epochs = 200
+num_epochs = 500
 input_dim = 100  # Dimension of the noise vector
 output_dim = 28 * 28  # MNIST images are 28x28 pixels
 
@@ -66,26 +75,26 @@ for epoch in range(num_epochs):
         images = images.view(-1, 28 * 28)
 
         # Create labels
-        real_labels = torch.ones(batch_size, 1)
-        fake_labels = torch.zeros(batch_size, 1)
+        real_labels = torch.ones(images.size(0), 1)  # Use the current batch size
+        fake_labels = torch.zeros(images.size(0), 1)  # Use the current batch size
 
         # Train Discriminator
         optimizer_D.zero_grad()
         outputs = discriminator(images)
-        d_loss_real = criterion(outputs, real_labels)
+        d_loss_real = criterion(outputs, real_labels)  # No need to slice here
         d_loss_real.backward()
 
-        noise = torch.randn(batch_size, input_dim)
+        noise = torch.randn(images.size(0), input_dim)  # Match noise size to batch size
         fake_images = generator(noise)
         outputs = discriminator(fake_images.detach())
-        d_loss_fake = criterion(outputs, fake_labels)
+        d_loss_fake = criterion(outputs, fake_labels)  # No need to slice here
         d_loss_fake.backward()
         optimizer_D.step()
 
         # Train Generator
         optimizer_G.zero_grad()
         outputs = discriminator(fake_images)
-        g_loss = criterion(outputs, real_labels)
+        g_loss = criterion(outputs, real_labels)  # No need to slice here
         g_loss.backward()
         optimizer_G.step()
 
