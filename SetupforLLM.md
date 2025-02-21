@@ -8,3 +8,6 @@
   #### Takeaway: qwen2.5 is actually better for learning languages
 
   ![image](https://github.com/user-attachments/assets/a01fcf28-1f21-474a-a643-92ad6a93b983)
+
+  ### My Motivation:
+  To build projects that solve real world commercial problems.
