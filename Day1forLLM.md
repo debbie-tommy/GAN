@@ -22,3 +22,9 @@ This is the conversational starter.
 
 The role of the large language model, is to figure out what is the most likely way to respond given this user prompt.
 Like if it is given a user prompt with the context in the system prompt, how should the next text coming from the agent be...
+
+## Takeaways
+
+- Simple html webscraping can be done with api key (gpt 4.o mini)
+- summarizations are the most common use case of genai: You can summarize the news, financial performance, resume from cover letter, etc...
+- Many websites cannot be summarized with the approach used for day 1 because they use JavaScript to render the web page.. Solution: Use a platform like Selenium or Playwright.. that can help render the page.
