@@ -2,8 +2,8 @@
 
 ![image](https://github.com/user-attachments/assets/97d32d28-d646-4792-8dcc-6807b3554710)
 
-### Tokens:
-Are the individual units which get passed into a model.
+## Tokens:
+Are the individual units which get passed into a model. Diffeent tokenizers work differently. There are pros and cons for having fewer or more tokens. checkout https://platform.openai.com/tokenizer  the gap between words is included as part of a token
 
 ## Early days- training Neural Networks
 In the early days of building neural networks, one of the things that you'd see quite often is neural 
